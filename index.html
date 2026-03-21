@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>AndreaOS</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AndreaOS">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0a0b">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiB2aWV3Qm94PSIwIDAgMTgwIDE4MCI+PHJlY3Qgd2lkdGg9IjE4MCIgaGVpZ2h0PSIxODAiIHJ4PSI0MCIgZmlsbD0iIzBhMGEwYiIvPjx0ZXh0IHg9IjkwIiB5PSIxMDUiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iNDQiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMwMGU1OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkFPUzwvdGV4dD48L3N2Zz4=">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0b;--bg2:#111113;--bg3:#19191d;--bg4:#222228;--text:#e8e8ed;--text2:#9898a4;--text3:#5a5a6a;--accent:#00e599;--accent2:#00b876;--accent-glow:rgba(0,229,153,0.15);--red:#ff4d6a;--red-glow:rgba(255,77,106,0.12);--orange:#ff9f43;--orange-glow:rgba(255,159,67,0.12);--blue:#4dabf7;--blue-glow:rgba(77,171,247,0.12);--yellow:#ffd43b;--purple:#b197fc;--purple-glow:rgba(177,151,252,0.12);--radius:14px;--radius-sm:8px}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;padding-top:env(safe-area-inset-top)}
+.header{position:sticky;top:0;z-index:100;background:rgba(10,10,11,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.05);padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
+.header h1{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-0.5px}
+.header-date{font-size:13px;color:var(--text3)}
+.nav{display:flex;gap:4px;padding:12px 16px;overflow-x:auto;scrollbar-width:none;position:sticky;top:57px;z-index:99;background:rgba(10,10,11,0.9);backdrop-filter:blur(16px)}
+.nav::-webkit-scrollbar{display:none}
+.nav-btn{flex-shrink:0;padding:8px 14px;border-radius:20px;border:1px solid rgba(255,255,255,0.06);background:var(--bg2);color:var(--text2);font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.nav-btn.active{background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:600}
+.section{display:none;padding:16px;padding-bottom:100px}
+.section.active{display:block;animation:fadeIn 0.25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.stitle{font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;font-family:'JetBrains Mono',monospace}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.kpi{background:var(--bg2);border:1px solid rgba(255,255,255,0.05);border-radius:var(--radius);padding:16px 14px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kpi.g::before{background:var(--accent)}.kpi.r::before{background:var(--red)}.kpi.b::before{background:var(--blue)}.kpi.p::before{background:var(--purple)}.kpi.o::before{background:var(--orange)}
+.kpi-l{font-size:10px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.kpi-v{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700}
+.kpi.g .kpi-v{color:var(--accent)}.kpi.r .kpi-v{color:var(--red)}.kpi.b .kpi-v{color:var(--blue)}.kpi.p .kpi-v{color:var(--purple)}.kpi.o .kpi-v{color:var(--orange)}
+.pbar-w{margin-bottom:20px}.pbar-i{display:flex;justify-content:space-between;margin-bottom:6px}.pbar-i span{font-size:12px;color:var(--text2)}.pbar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}.pbar-f{height:100%;background:linear-gradient(90deg,var(--accent),var(--blue));border-radius:3px;transition:width 0.5s ease}
+.card{background:var(--bg2);border:1px solid rgba(255,255,255,0.05);border-radius:var(--radius);padding:14px;margin-bottom:10px;transition:all 0.2s}
+.card:active{transform:scale(0.98)}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.card-t{font-weight:600;font-size:14px}
+.card-a{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.card-a.inc{color:var(--accent)}.card-a.exp{color:var(--red)}
+.card-sub{font-size:12px;color:var(--text2);margin-bottom:6px}
+.card-bot{display:flex;justify-content:space-between;align-items:center}
+.bdg{font-size:10px;font-weight:600;padding:3px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:0.5px}
+.bdg-g{background:var(--accent-glow);color:var(--accent)}.bdg-r{background:var(--red-glow);color:var(--red)}.bdg-o{background:var(--orange-glow);color:var(--orange)}.bdg-b{background:var(--blue-glow);color:var(--blue)}.bdg-p{background:var(--purple-glow);color:var(--purple)}.bdg-x{background:rgba(255,255,255,0.06);color:var(--text3)}
+.cact{display:flex;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.04)}
+.ca{flex:1;padding:7px;border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.06);background:var(--bg3);color:var(--text2);font-size:11px;font-weight:500;text-align:center;cursor:pointer;font-family:'Outfit',sans-serif}
+.ca:active{transform:scale(0.95)}
+.ca.cg{border-color:rgba(0,229,153,0.2);color:var(--accent)}.ca.cb{border-color:rgba(77,171,247,0.2);color:var(--blue)}.ca.cr{border-color:rgba(255,77,106,0.15);color:var(--red)}
+.flt{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;scrollbar-width:none;padding-bottom:4px}
+.flt::-webkit-scrollbar{display:none}
+.fb{flex-shrink:0;padding:6px 12px;border-radius:16px;border:1px solid rgba(255,255,255,0.06);background:var(--bg2);color:var(--text3);font-size:11px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s}
+.fb.a{background:var(--bg4);color:var(--text);border-color:rgba(255,255,255,0.12)}
+.fc{display:inline-block;background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:8px;font-size:9px;margin-left:3px}
+.tgl{display:flex;gap:4px;margin-bottom:14px;background:var(--bg2);border-radius:20px;padding:3px;border:1px solid rgba(255,255,255,0.05)}
+.tb{flex:1;padding:7px;border-radius:18px;border:none;background:transparent;color:var(--text3);font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;cursor:pointer;text-align:center;transition:all 0.2s}
+.tb.a{background:var(--bg4);color:var(--text)}
+.cn{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding:0 4px}
+.cnb{background:var(--bg3);border:1px solid rgba(255,255,255,0.06);color:var(--text2);width:36px;height:36px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.cm{font-size:16px;font-weight:600}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:16px}
+.ch{font-size:10px;color:var(--text3);text-align:center;padding:6px 0;font-weight:600}
+.cd{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;border-radius:10px;cursor:pointer;position:relative;gap:2px;transition:all 0.15s}
+.cd:hover{background:var(--bg3)}.cd.today{background:var(--bg4);font-weight:700;color:var(--accent)}.cd.sel{background:var(--accent);color:var(--bg);font-weight:700}.cd.om{color:var(--text3);opacity:0.3}
+.dots{display:flex;gap:2px;position:absolute;bottom:3px}
+.dot{width:4px;height:4px;border-radius:50%}.dot.di{background:var(--accent)}.dot.de{background:var(--red)}.dot.dd{background:var(--orange)}
+.fc2{background:var(--bg2);border:1px solid rgba(255,255,255,0.05);border-radius:var(--radius);padding:14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px}
+.fck{width:22px;height:22px;flex-shrink:0;border:2px solid var(--text3);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.25s;margin-top:1px}
+.fck.d{background:var(--accent);border-color:var(--accent)}.fck.d::after{content:'✓';color:var(--bg);font-size:12px;font-weight:700}
+.fc2.d{opacity:0.4}.fc2.d .ft2{text-decoration:line-through}
+.ftx{flex:1}.ft2{font-weight:600;font-size:13px;margin-bottom:3px}.fsr{font-size:11px;color:var(--text3)}
+.fnum{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--text3);opacity:0.3}
+.cr{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--bg3);border-radius:var(--radius-sm);margin-top:6px;font-size:12px}
+.ci{display:flex;flex-direction:column;gap:2px}
+.cna{font-weight:500;color:var(--text)}.cam{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2)}
+.cs{cursor:pointer;padding:4px 10px;border-radius:10px;font-size:10px;font-weight:600;text-transform:uppercase;border:none;font-family:'Outfit',sans-serif}
+.cs.cp{background:var(--accent-glow);color:var(--accent)}.cs.cu{background:var(--red-glow);color:var(--red)}
+.rr{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04)}.rr:last-child{border:none}
+.fab{position:fixed;bottom:24px;right:20px;width:54px;height:54px;border-radius:50%;background:var(--accent);color:var(--bg);border:none;font-size:26px;font-weight:300;cursor:pointer;box-shadow:0 4px 24px rgba(0,229,153,0.3);z-index:200;display:flex;align-items:center;justify-content:center}
+.fab:active{transform:scale(0.9)}
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);z-index:300;align-items:flex-end;justify-content:center}
+.mo.open{display:flex;animation:fadeIn 0.2s ease}
+.ml{background:var(--bg2);border-radius:20px 20px 0 0;width:100%;max-width:500px;max-height:85dvh;overflow-y:auto;padding:24px 20px 40px;animation:slideUp 0.3s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.ml h2{font-size:17px;font-weight:700;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center}
+.mx{background:var(--bg3);border:none;color:var(--text2);width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.fg{margin-bottom:14px}.fl{font-size:11px;color:var(--text2);font-weight:500;margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:0.5px}
+.fi,.fs,.ft{width:100%;padding:11px 12px;background:var(--bg3);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-sm);color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;outline:none;transition:border 0.2s}
+.fi:focus,.fs:focus,.ft:focus{border-color:var(--accent)}.fs{appearance:none;cursor:pointer}.ft{resize:vertical;min-height:70px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bp{width:100%;padding:13px;background:var(--accent);color:var(--bg);border:none;border-radius:var(--radius-sm);font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:6px}.bp:active{transform:scale(0.97)}
+.bd{width:100%;padding:11px;background:transparent;color:var(--red);border:1px solid rgba(255,77,106,0.2);border-radius:var(--radius-sm);font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;cursor:pointer;margin-top:6px}
+.fs option{background:var(--bg3);color:var(--text)}
+.empty{text-align:center;padding:50px 20px;color:var(--text3);font-size:13px}.empty .em{font-size:36px;margin-bottom:10px}
+@media(min-width:600px){.section{max-width:540px;margin:0 auto}.kpi-grid{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<div class="header"><h1>AndreaOS_</h1><div style="display:flex;align-items:center;gap:12px"><div class="header-date" id="hDate"></div><button onclick="openSettings()" style="background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;padding:4px">⚙</button></div></div>
+<div class="nav">
+  <button class="nav-btn active" data-tab="dashboard">Dashboard</button>
+  <button class="nav-btn" data-tab="finanze">Finanze</button>
+  <button class="nav-btn" data-tab="calendario">Calendario</button>
+  <button class="nav-btn" data-tab="lavori">Lavori</button>
+  <button class="nav-btn" data-tab="focus">Focus</button>
+</div>
+
+<div class="section active" id="sec-dashboard">
+  <div class="kpi-grid" id="dKpi"></div>
+  <div class="pbar-w"><div class="pbar-i"><span>Obiettivo mese</span><span id="dPct">0%</span></div><div class="pbar"><div class="pbar-f" id="dFill" style="width:0%"></div></div></div>
+  <div class="stitle">Uscite per categoria</div><div id="dReport"></div>
+  <div style="margin-top:20px"><div class="stitle">Collaboratori da pagare</div><div id="dCollab"></div></div>
+  <div style="margin-top:20px"><div class="stitle">Prossime scadenze</div><div id="dDead"></div></div>
+</div>
+
+<div class="section" id="sec-finanze">
+  <div class="tgl" id="fTgl"><button class="tb a" data-ft="tutti">Tutti</button><button class="tb" data-ft="entrate">Entrate</button><button class="tb" data-ft="uscite">Uscite</button></div>
+  <div class="flt" id="fCat"></div><div id="fList"></div>
+</div>
+
+<div class="section" id="sec-calendario">
+  <div class="cn"><button class="cnb" onclick="cNav(-1)">‹</button><div class="cm" id="cMon"></div><button class="cnb" onclick="cNav(1)">›</button></div>
+  <div class="cg" id="cGrid"></div><div id="cDetail"></div>
+</div>
+
+<div class="section" id="sec-lavori"><div class="flt" id="lFlt"></div><div id="lList"></div></div>
+
+<div class="section" id="sec-focus"><div class="stitle">Oggi — max 3 task</div><div id="foList"></div></div>
+
+<button class="fab" id="fab">+</button>
+<div class="mo" id="mOv"><div class="ml" id="mC"></div></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+firebase.initializeApp({apiKey:"AIzaSyCs7Gpx9uZk3Zr_UOGbyfa_EL9MjfSrVUE",authDomain:"andreaos-a7a3b.firebaseapp.com",databaseURL:"https://andreaos-a7a3b-default-rtdb.europe-west1.firebasedatabase.app",projectId:"andreaos-a7a3b",storageBucket:"andreaos-a7a3b.firebasestorage.app",messagingSenderId:"518638530790",appId:"1:518638530790:web:c905ec955c932c019bcb27"});
+const db=firebase.database();
+
+let TX={},JB={},FO={},ST={obiettivo:3000},CT={};
+let tab='dashboard',fFlt='tutti',fCat='tutte',lFlt='tutti';
+let cY,cM,cSel,exp={};
+const DCATS={income:['Shooting','Video','Contenuti','Consulenza','Altro'],expense:['Collaboratori','Attrezzatura','Software','Altro']};
+const JSTAT=[{k:'todo',l:'Da fare',c:'bdg-b'},{k:'progress',l:'In corso',c:'bdg-o'},{k:'review',l:'Revisione',c:'bdg-p'},{k:'done',l:'Completato',c:'bdg-g'}];
+
+function init(){
+  const n=new Date();cY=n.getFullYear();cM=n.getMonth();cSel=isoD(n);
+  document.getElementById('hDate').textContent=n.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById('sec-'+tab).classList.add('active')});
+  document.getElementById('fab').onclick=()=>{if(tab==='finanze'||tab==='dashboard'||tab==='calendario')openTx();else if(tab==='lavori')openJb();else if(tab==='focus')openFo()};
+  document.getElementById('mOv').onclick=e=>{if(e.target===document.getElementById('mOv'))closeM()};
+  document.getElementById('fTgl').onclick=e=>{if(!e.target.dataset.ft)return;fFlt=e.target.dataset.ft;fCat='tutte';document.querySelectorAll('#fTgl .tb').forEach(b=>b.classList.toggle('a',b.dataset.ft===fFlt));rFin()};
+  db.ref('transactions').on('value',s=>{TX=s.val()||{};R()});
+  db.ref('jobs').on('value',s=>{JB=s.val()||{};R()});
+  db.ref('focus').on('value',s=>{FO=s.val()||{};R()});
+  db.ref('settings').on('value',s=>{ST=s.val()||{obiettivo:3000};R()});
+  db.ref('categories').on('value',s=>{CT=s.val()||{};R()});
+}
+
+function gc(t){return(CT[t]&&CT[t].length)?CT[t]:DCATS[t]||[]}
+function openM(h){document.getElementById('mC').innerHTML=h;document.getElementById('mOv').classList.add('open')}
+function closeM(){document.getElementById('mOv').classList.remove('open')}
+function R(){rDash();rFin();rCal();rLav();rFoc()}
+
+// ══════ DASHBOARD ══════
+function rDash(){
+  const n=new Date(),m=n.getMonth(),y=n.getFullYear(),txs=Object.values(TX);
+  let iM=0,eM=0;const eByCat={};
+  txs.forEach(t=>{const a=parseFloat(t.amount)||0;const d=new Date(t.date);if(d.getMonth()===m&&d.getFullYear()===y){if(t.type==='income')iM+=a;else{eM+=a;eByCat[t.category]=(eByCat[t.category]||0)+a}}});
+  const s=iM-eM,ob=ST.obiettivo||3000,pct=ob>0?Math.min(100,Math.round((iM/ob)*100)):0;
+  document.getElementById('dKpi').innerHTML=`<div class="kpi ${s>=0?'g':'r'}"><div class="kpi-l">Saldo mese</div><div class="kpi-v">${fE(s)}</div></div><div class="kpi g"><div class="kpi-l">Entrate</div><div class="kpi-v">${fE(iM)}</div></div><div class="kpi r"><div class="kpi-l">Uscite</div><div class="kpi-v">${fE(eM)}</div></div><div class="kpi p"><div class="kpi-l">Obiettivo</div><div class="kpi-v">${fE(ob)}</div></div>`;
+  document.getElementById('dPct').textContent=pct+'%';document.getElementById('dFill').style.width=pct+'%';
+  const sc=Object.entries(eByCat).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('dReport').innerHTML=sc.length?sc.map(([c,a])=>`<div class="rr"><span style="font-size:13px;color:var(--text2)">${esc(c)} <span style="color:var(--text3);font-size:11px">${eM>0?Math.round(a/eM*100):0}%</span></span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--red)">${fE(a)}</span></div>`).join(''):'<div style="color:var(--text3);font-size:12px;padding:10px 0">Nessuna uscita questo mese</div>';
+  const up=[];Object.entries(JB).forEach(([jid,j])=>{if(j.collaborators)Object.entries(j.collaborators).forEach(([cid,c])=>{if(!c.paid)up.push({...c,jn:j.name,ji:jid,ci:cid})})});
+  document.getElementById('dCollab').innerHTML=up.length?up.map(c=>`<div class="cr"><div class="ci"><span class="cna">${esc(c.name)} <span style="color:var(--text3);font-size:10px">• ${esc(c.jn)}</span></span><span class="cam">${fE(parseFloat(c.amount)||0)}</span></div><button class="cs cu" onclick="tgP('${c.ji}','${c.ci}')">Da pagare</button></div>`).join(''):'<div style="color:var(--text3);font-size:12px;padding:10px 0">Tutti pagati ✓</div>';
+  const td=isoD(new Date()),uc=Object.entries(JB).filter(([,j])=>j.deadline&&j.deadline>=td&&j.status!=='done').sort((a,b)=>a[1].deadline.localeCompare(b[1].deadline)).slice(0,5);
+  document.getElementById('dDead').innerHTML=uc.length?uc.map(([,j])=>{const dy=dBtw(td,j.deadline);return`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04)"><span style="font-size:13px">${esc(j.name)}</span><span style="font-size:12px;${dy<=2?'color:var(--red)':dy<=5?'color:var(--orange)':'color:var(--text2)'}">${fD(j.deadline)} (${dy}g)</span></div>`}).join(''):'<div style="color:var(--text3);font-size:12px;padding:10px 0">Nessuna scadenza</div>';
+}
+
+// ══════ FINANZE ══════
+function rFin(){
+  const n=new Date(),m=n.getMonth(),y=n.getFullYear(),txs=Object.entries(TX);
+  const fl=txs.filter(([,t])=>{const d=new Date(t.date);if(d.getMonth()!==m||d.getFullYear()!==y)return false;if(fFlt==='entrate'&&t.type!=='income')return false;if(fFlt==='uscite'&&t.type!=='expense')return false;if(fCat!=='tutte'&&t.category!==fCat)return false;return true}).sort((a,b)=>b[1].date.localeCompare(a[1].date));
+  const ac=new Set();txs.forEach(([,t])=>{const d=new Date(t.date);if(d.getMonth()===m&&d.getFullYear()===y&&(fFlt==='tutti'||(fFlt==='entrate'&&t.type==='income')||(fFlt==='uscite'&&t.type==='expense')))ac.add(t.category)});
+  let fh=`<button class="fb ${fCat==='tutte'?'a':''}" onclick="sFCat('tutte')">Tutte</button>`;
+  ac.forEach(c=>{fh+=`<button class="fb ${fCat===c?'a':''}" onclick="sFCat('${esc(c)}')">${esc(c)}</button>`});
+  document.getElementById('fCat').innerHTML=fh;
+  if(!fl.length){document.getElementById('fList').innerHTML='<div class="empty"><div class="em">💰</div>Nessuna transazione.<br>Premi + per aggiungerne una.</div>';return}
+  document.getElementById('fList').innerHTML=fl.map(([id,t])=>{const ii=t.type==='income';const ex=exp['t_'+id];return`<div class="card" onclick="tgE('t_${id}')"><div class="card-top"><div class="card-t">${esc(t.description)}</div><div class="card-a ${ii?'inc':'exp'}">${ii?'+':'−'}${fE(Math.abs(parseFloat(t.amount)||0))}</div></div><div class="card-bot"><span class="bdg ${ii?'bdg-g':'bdg-r'}">${esc(t.category)}</span><span style="font-size:11px;color:var(--text3)">${fD(t.date)}</span></div>${ex?`<div class="cact"><button class="ca cb" onclick="event.stopPropagation();openTx('${id}')">Modifica</button><button class="ca cr" onclick="event.stopPropagation();dTx('${id}')">Elimina</button></div>`:''}</div>`}).join('');
+}
+function sFCat(c){fCat=c;rFin()}
+
+// ══════ CALENDARIO ══════
+function rCal(){
+  const mn=['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+  document.getElementById('cMon').textContent=mn[cM]+' '+cY;
+  const f=new Date(cY,cM,1),l=new Date(cY,cM+1,0),sd=f.getDay()||7,dim=l.getDate(),pl=new Date(cY,cM,0).getDate();
+  const em={};
+  Object.values(TX).forEach(t=>{if(!em[t.date])em[t.date]={i:0,e:0,d:0};t.type==='income'?em[t.date].i=1:em[t.date].e=1});
+  Object.values(JB).forEach(j=>{if(j.deadline){if(!em[j.deadline])em[j.deadline]={i:0,e:0,d:0};em[j.deadline].d=1}});
+  const td=isoD(new Date());let g='';
+  ['L','M','M','G','V','S','D'].forEach(d=>{g+=`<div class="ch">${d}</div>`});
+  for(let i=sd-2;i>=0;i--)g+=`<div class="cd om">${pl-i}</div>`;
+  for(let d=1;d<=dim;d++){const ds=`${cY}-${String(cM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const ev=em[ds];let dots='';if(ev){dots='<div class="dots">';if(ev.i)dots+='<div class="dot di"></div>';if(ev.e)dots+='<div class="dot de"></div>';if(ev.d)dots+='<div class="dot dd"></div>';dots+='</div>'}g+=`<div class="cd${ds===td?' today':''}${ds===cSel?' sel':''}" onclick="cSl('${ds}')">${d}${dots}</div>`}
+  const tc=Math.ceil((sd-1+dim)/7)*7;for(let i=1;i<=tc-(sd-1)-dim;i++)g+=`<div class="cd om">${i}</div>`;
+  document.getElementById('cGrid').innerHTML=g;
+  if(!cSel){document.getElementById('cDetail').innerHTML='';return}
+  const txD=Object.entries(TX).filter(([,t])=>t.date===cSel);const jD=Object.entries(JB).filter(([,j])=>j.deadline===cSel);
+  let h=`<div class="stitle" style="margin-top:8px">${fD(cSel)}</div>`;
+  if(!txD.length&&!jD.length)h+='<div style="color:var(--text3);font-size:12px;padding:10px 0">Niente per questo giorno</div>';
+  else{txD.forEach(([,t])=>{const ii=t.type==='income';h+=`<div class="card" style="padding:10px 12px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px">${esc(t.description)}</span><span class="card-a ${ii?'inc':'exp'}" style="font-size:13px">${ii?'+':'−'}${fE(Math.abs(parseFloat(t.amount)||0))}</span></div></div>`});jD.forEach(([,j])=>{const si=JSTAT.find(s=>s.k===j.status)||JSTAT[0];h+=`<div class="card" style="padding:10px 12px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px">📋 ${esc(j.name)}</span><span class="bdg ${si.c}">${si.l}</span></div></div>`})}
+  document.getElementById('cDetail').innerHTML=h;
+}
+function cNav(d){cM+=d;if(cM>11){cM=0;cY++}if(cM<0){cM=11;cY--}rCal()}
+function cSl(d){cSel=d;rCal()}
+
+// ══════ LAVORI ══════
+function rLav(){
+  const jbs=Object.entries(JB),cnt={tutti:jbs.length};JSTAT.forEach(s=>cnt[s.k]=0);jbs.forEach(([,j])=>{if(cnt[j.status]!==undefined)cnt[j.status]++});
+  let fh=`<button class="fb ${lFlt==='tutti'?'a':''}" onclick="sLF('tutti')">Tutti <span class="fc">${cnt.tutti}</span></button>`;
+  JSTAT.forEach(s=>{fh+=`<button class="fb ${lFlt===s.k?'a':''}" onclick="sLF('${s.k}')">${s.l} <span class="fc">${cnt[s.k]}</span></button>`});
+  document.getElementById('lFlt').innerHTML=fh;
+  const fl=jbs.filter(([,j])=>lFlt==='tutti'||j.status===lFlt).sort((a,b)=>(a[1].deadline||'9').localeCompare(b[1].deadline||'9'));
+  if(!fl.length){document.getElementById('lList').innerHTML='<div class="empty"><div class="em">📋</div>Nessun lavoro.<br>Premi + per aggiungerne uno.</div>';return}
+  document.getElementById('lList').innerHTML=fl.map(([id,j])=>{const si=JSTAT.find(s=>s.k===j.status)||JSTAT[0];const ex=exp['j_'+id];const co=j.collaborators?Object.entries(j.collaborators):[];const up=co.filter(([,c])=>!c.paid).length;
+    return`<div class="card" onclick="tgE('j_${id}')"><div class="card-top"><div class="card-t">${esc(j.name)}</div><span class="bdg ${si.c}">${si.l}</span></div>${j.client?`<div class="card-sub">Cliente: ${esc(j.client)}</div>`:''}${j.amount?`<div class="card-sub" style="font-family:'JetBrains Mono',monospace;color:var(--accent)">€${parseFloat(j.amount).toLocaleString('it-IT')}</div>`:''}
+    <div class="card-bot">${j.deadline?`<span style="font-size:11px;color:var(--text3)">Scadenza: ${fD(j.deadline)}</span>`:'<span></span>'}${up>0?`<span class="bdg bdg-r">${up} da pagare</span>`:''}</div>
+    ${co.map(([cid,c])=>`<div class="cr"><div class="ci"><span class="cna">${esc(c.name)}</span><span class="cam">${fE(parseFloat(c.amount)||0)}</span></div><button class="cs ${c.paid?'cp':'cu'}" onclick="event.stopPropagation();tgP('${id}','${cid}')">${c.paid?'Pagato':'Da pagare'}</button></div>`).join('')}
+    ${ex?`<div class="cact">${si.k!=='done'?`<button class="ca cg" onclick="event.stopPropagation();aJ('${id}')">Avanza →</button>`:''}
+    <button class="ca cb" onclick="event.stopPropagation();openJb('${id}')">Modifica</button><button class="ca cr" onclick="event.stopPropagation();dJ('${id}')">Elimina</button></div>`:''}</div>`}).join('');
+}
+function sLF(f){lFlt=f;rLav()}
+function aJ(id){const j=JB[id];if(!j)return;const i=JSTAT.findIndex(s=>s.k===j.status);if(i<JSTAT.length-1)db.ref('jobs/'+id).update({status:JSTAT[i+1].k})}
+function tgP(ji,ci){const c=JB[ji]?.collaborators?.[ci];if(c)db.ref(`jobs/${ji}/collaborators/${ci}`).update({paid:!c.paid})}
+function dJ(id){if(confirm('Eliminare?'))db.ref('jobs/'+id).remove()}
+
+// ══════ FOCUS ══════
+function rFoc(){
+  const td=isoD(new Date()),tks=Object.entries(FO).filter(([,f])=>f.date===td);
+  if(!tks.length){document.getElementById('foList').innerHTML='<div class="empty"><div class="em">🎯</div>Nessun task per oggi.<br>Premi + per impostare il focus.</div>';return}
+  document.getElementById('foList').innerHTML=tks.map(([id,f],i)=>`<div class="fc2 ${f.done?'d':''}"><div class="fck ${f.done?'d':''}" onclick="tgFo('${id}')"></div><div class="ftx"><div class="ft2">${esc(f.title)}</div><div class="fsr">${esc(f.source||'')}</div></div><div class="fnum">${i+1}</div></div>`).join('');
+}
+function tgFo(id){db.ref('focus/'+id).update({done:!FO[id].done})}
+
+// ══════ MODALS ══════
+function openTx(eid){
+  const t=eid?TX[eid]:null,ti=t?'Modifica Transazione':'Nuova Transazione',tp=t?t.type:'income';
+  openM(`<h2>${ti}<button class="mx" onclick="closeM()">×</button></h2>
+  <div class="fg"><label class="fl">Tipo</label><select class="fs" id="mTp" onchange="txTc()"><option value="income" ${tp==='income'?'selected':''}>Entrata</option><option value="expense" ${tp==='expense'?'selected':''}>Uscita</option></select></div>
+  <div class="fg"><label class="fl">Descrizione</label><input class="fi" id="mDs" value="${t?esc(t.description):''}" placeholder="Es: Shooting matrimonio"></div>
+  <div class="fr"><div class="fg"><label class="fl">Importo €</label><input class="fi" id="mAm" type="number" value="${t?t.amount:''}" placeholder="0"></div>
+  <div class="fg"><label class="fl">Data</label><input class="fi" id="mDt" type="date" value="${t?t.date:cSel||isoD(new Date())}"></div></div>
+  <div class="fg"><label class="fl">Categoria</label><select class="fs" id="mCt"></select></div>
+  <div class="fg"><label class="fl">Note</label><textarea class="ft" id="mNt" placeholder="Opzionale">${t?esc(t.notes||''):''}</textarea></div>
+  <button class="bp" onclick="sTx('${eid||''}')">Salva</button>
+  ${eid?`<button class="bd" onclick="dTx('${eid}');closeM()">Elimina</button>`:''}`);
+  txTc(t?t.category:null);
+}
+function txTc(pre){const tp=document.getElementById('mTp').value,cs=tp==='income'?gc('income'):gc('expense'),sl=document.getElementById('mCt');sl.innerHTML=cs.map(c=>`<option value="${esc(c)}" ${pre===c?'selected':''}>${esc(c)}</option>`).join('')}
+function sTx(eid){const d={type:document.getElementById('mTp').value,description:document.getElementById('mDs').value.trim(),amount:document.getElementById('mAm').value,date:document.getElementById('mDt').value,category:document.getElementById('mCt').value,notes:document.getElementById('mNt').value.trim()};if(!d.description||!d.amount)return;if(eid)db.ref('transactions/'+eid).update(d);else db.ref('transactions').push({...d,created:new Date().toISOString()});closeM()}
+function dTx(id){if(confirm('Eliminare?'))db.ref('transactions/'+id).remove()}
+
+function openJb(eid){
+  const j=eid?JB[eid]:null,ti=j?'Modifica Lavoro':'Nuovo Lavoro';
+  let so=JSTAT.map(s=>`<option value="${s.k}" ${j&&j.status===s.k?'selected':''}>${s.l}</option>`).join('');
+  const co=j&&j.collaborators?Object.entries(j.collaborators):[];
+  openM(`<h2>${ti}<button class="mx" onclick="closeM()">×</button></h2>
+  <div class="fg"><label class="fl">Nome lavoro</label><input class="fi" id="jNm" value="${j?esc(j.name):''}" placeholder="Es: Video matrimonio Rossi"></div>
+  <div class="fr"><div class="fg"><label class="fl">Stato</label><select class="fs" id="jSt">${so}</select></div>
+  <div class="fg"><label class="fl">Importo €</label><input class="fi" id="jAm" type="number" value="${j?j.amount||'':''}" placeholder="0"></div></div>
+  <div class="fg"><label class="fl">Cliente</label><input class="fi" id="jCl" value="${j?esc(j.client||''):''}" placeholder="Nome cliente"></div>
+  <div class="fg"><label class="fl">Scadenza</label><input class="fi" id="jDl" type="date" value="${j?j.deadline||'':''}"></div>
+  <div class="fg"><label class="fl">Note</label><textarea class="ft" id="jNt" placeholder="Opzionale">${j?esc(j.notes||''):''}</textarea></div>
+  <div class="fg"><label class="fl">Collaboratori</label><div id="jCo">${co.map(([cid,c])=>`<div class="cer" data-cid="${cid}" style="display:flex;gap:6px;margin-bottom:6px"><input class="fi cn2" style="flex:2" value="${esc(c.name)}" placeholder="Nome"><input class="fi ca2" style="flex:1" type="number" value="${c.amount||''}" placeholder="€"></div>`).join('')}</div>
+  <button type="button" style="margin-top:6px;padding:8px 14px;background:var(--bg3);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-sm);color:var(--text2);font-size:12px;font-family:'Outfit',sans-serif;cursor:pointer" onclick="aCr()">+ Collaboratore</button></div>
+  <button class="bp" onclick="sJb('${eid||''}')">Salva</button>
+  ${eid?`<button class="bd" onclick="dJ('${eid}');closeM()">Elimina</button>`:''}`);
+}
+function aCr(){const c=document.getElementById('jCo'),d=document.createElement('div');d.className='cer';d.dataset.cid='n_'+Date.now();d.style.cssText='display:flex;gap:6px;margin-bottom:6px';d.innerHTML=`<input class="fi cn2" style="flex:2" placeholder="Nome"><input class="fi ca2" style="flex:1" type="number" placeholder="€">`;c.appendChild(d)}
+function sJb(eid){const d={name:document.getElementById('jNm').value.trim(),status:document.getElementById('jSt').value,amount:document.getElementById('jAm').value,client:document.getElementById('jCl').value.trim(),deadline:document.getElementById('jDl').value,notes:document.getElementById('jNt').value.trim()};if(!d.name)return;
+  const rows=document.querySelectorAll('.cer'),cols={};rows.forEach(r=>{const nm=r.querySelector('.cn2').value.trim(),am=r.querySelector('.ca2').value;if(nm){const cid=r.dataset.cid||('c_'+Date.now());const ex=eid&&JB[eid]?.collaborators?.[cid];cols[cid]={name:nm,amount:am||'0',paid:ex?ex.paid:false}}});
+  d.collaborators=cols;if(eid)db.ref('jobs/'+eid).update(d);else db.ref('jobs').push({...d,created:new Date().toISOString()});closeM()}
+
+function openFo(){const td=isoD(new Date()),cnt=Object.values(FO).filter(f=>f.date===td).length;
+  if(cnt>=3){openM(`<h2>Focus pieno<button class="mx" onclick="closeM()">×</button></h2><p style="color:var(--text2);text-align:center;padding:20px 0">Hai già 3 task oggi.<br>Completane uno prima.</p>`);return}
+  let pk='';Object.entries(JB).filter(([,j])=>j.status!=='done').forEach(([,j])=>{pk+=`<option value="Lavoro: ${esc(j.name)}">Lavoro: ${esc(j.name)}</option>`});
+  openM(`<h2>Nuovo Focus<button class="mx" onclick="closeM()">×</button></h2>
+  <div class="fg"><label class="fl">Cosa devi fare</label><input class="fi" id="foTi" placeholder="Es: Consegnare video"></div>
+  <div class="fg"><label class="fl">Collegato a</label><select class="fs" id="foSr"><option value="">— Nessuno —</option>${pk}</select></div>
+  <button class="bp" onclick="sFo()">Aggiungi</button>`);
+}
+function sFo(){const ti=document.getElementById('foTi').value.trim();if(!ti)return;db.ref('focus').push({title:ti,source:document.getElementById('foSr').value,date:isoD(new Date()),done:false});closeM()}
+
+// ══════ HELPERS ══════
+function tgE(id){exp[id]=!exp[id];R()}
+function fE(n){return(n<0?'−':'')+'€'+Math.abs(n).toLocaleString('it-IT',{minimumFractionDigits:0,maximumFractionDigits:0})}
+function fD(ds){if(!ds)return'';return new Date(ds+'T00:00:00').toLocaleDateString('it-IT',{day:'numeric',month:'short'})}
+function dBtw(a,b){return Math.round((new Date(b+'T00:00:00')-new Date(a+'T00:00:00'))/(864e5))}
+function isoD(d){return d.toISOString().split('T')[0]}
+function esc(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML}
+
+// ══════ SETTINGS / EXPORT / IMPORT ══════
+function openSettings(){
+  openM(`<h2>Impostazioni<button class="mx" onclick="closeM()">×</button></h2>
+  <div class="fg"><label class="fl">Obiettivo mensile €</label><input class="fi" id="sOb" type="number" value="${ST.obiettivo||3000}"></div>
+  <button class="bp" onclick="saveSt()">Salva obiettivo</button>
+  <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.06)">
+    <div class="fl" style="margin-bottom:12px">Backup dati</div>
+    <button class="bp" style="background:var(--blue)" onclick="exportData()">📥 Esporta JSON (backup)</button>
+    <div style="margin-top:10px"><label class="bp" style="background:var(--orange);display:block;text-align:center;cursor:pointer">📤 Importa JSON (ripristina)<input type="file" accept=".json" onchange="importData(event)" style="display:none"></label></div>
+  </div>
+  <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.06)">
+    <div class="fl" style="margin-bottom:12px">Categorie personalizzate</div>
+    <div class="fg"><label class="fl">Categorie entrate (separate da virgola)</label><input class="fi" id="sCatI" value="${(gc('income')).join(', ')}" placeholder="Shooting, Video, Contenuti..."></div>
+    <div class="fg"><label class="fl">Categorie uscite (separate da virgola)</label><input class="fi" id="sCatE" value="${(gc('expense')).join(', ')}" placeholder="Collaboratori, Attrezzatura..."></div>
+    <button class="bp" style="background:var(--purple)" onclick="saveCats()">Salva categorie</button>
+  </div>
+  <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.06)">
+    <button class="bd" onclick="if(confirm('ATTENZIONE: Questo cancella TUTTI i dati. Sei sicuro?')){clearAll()}">🗑 Cancella tutti i dati</button>
+  </div>`);
+}
+
+function saveSt(){
+  db.ref('settings').set({obiettivo:parseInt(document.getElementById('sOb').value)||3000});
+  closeM();
+}
+
+function saveCats(){
+  const incCats=document.getElementById('sCatI').value.split(',').map(s=>s.trim()).filter(s=>s);
+  const expCats=document.getElementById('sCatE').value.split(',').map(s=>s.trim()).filter(s=>s);
+  db.ref('categories').set({income:incCats,expense:expCats});
+  closeM();
+}
+
+function exportData(){
+  const data={
+    _export:'AndreaOS',
+    _date:new Date().toISOString(),
+    transactions:TX,
+    jobs:JB,
+    focus:FO,
+    settings:ST,
+    categories:CT
+  };
+  const json=JSON.stringify(data,null,2);
+  const blob=new Blob([json],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`andreaos-backup-${isoD(new Date())}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      const data=JSON.parse(ev.target.result);
+      if(!data._export||data._export!=='AndreaOS'){alert('File non valido');return}
+      if(!confirm(`Importare backup del ${new Date(data._date).toLocaleDateString('it-IT')}?\nQuesto SOVRASCRIVE tutti i dati attuali.`))return;
+      const updates={};
+      if(data.transactions)updates['/transactions']=data.transactions;
+      if(data.jobs)updates['/jobs']=data.jobs;
+      if(data.focus)updates['/focus']=data.focus;
+      if(data.settings)updates['/settings']=data.settings;
+      if(data.categories)updates['/categories']=data.categories;
+      db.ref().update(updates).then(()=>{alert('Importazione completata!');closeM()}).catch(err=>{alert('Errore: '+err.message)});
+    }catch(err){alert('Errore nel file JSON: '+err.message)}
+  };
+  reader.readAsText(file);
+}
+
+function clearAll(){
+  db.ref().set({settings:{obiettivo:3000}}).then(()=>{alert('Dati cancellati');closeM()});
+}
+
+init();
+</script>
+</body>
+</html>
