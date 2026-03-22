@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover,user-scalable=no,maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#050506">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<link rel="manifest" href="manifest.json">
+<title>AndreaOS_</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#050506;--bg2:#0e0e12;--bg3:#161619;--bg4:#1e1e24;
+--glass:rgba(255,255,255,0.04);--glass2:rgba(255,255,255,0.07);
+--gb:rgba(255,255,255,0.08);
+--tx:#f5f5f7;--tx2:#98989f;--tx3:#636369;--tx4:#3a3a3f;
+--grn:#30d158;--grn-d:rgba(48,209,88,0.10);
+--red:#ff453a;--red-d:rgba(255,69,58,0.10);
+--blu:#0a84ff;--blu-d:rgba(10,132,255,0.10);
+--org:#ff9f0a;--org-d:rgba(255,159,10,0.10);
+--pur:#bf5af2;
+--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+}
+html,body{background:var(--bg);color:var(--tx);min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body{font-family:'Outfit',sans-serif;padding:var(--st) 0 var(--sb)}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* AMBIENT BG */
+.ambient{
+position:fixed;top:0;left:0;right:0;height:50vh;pointer-events:none;z-index:0;
+background:radial-gradient(ellipse at 30% 0%,rgba(48,209,88,0.06) 0%,transparent 60%),
+           radial-gradient(ellipse at 70% 0%,rgba(10,132,255,0.04) 0%,transparent 50%);
+}
+
+/* CONTAINER */
+.wrap{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:0 20px}
+
+/* HEADER */
+.hdr{padding:40px 0 10px;text-align:center}
+.hdr-logo{
+font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:800;
+letter-spacing:-1px;margin-bottom:6px;
+}
+.hdr-logo em{font-style:normal;color:var(--grn)}
+.hdr-sub{font-size:13px;color:var(--tx3);font-weight:400}
+.hdr-date{font-size:12px;color:var(--tx4);margin-top:8px;font-family:'JetBrains Mono',monospace}
+
+/* QUICK STATS */
+.qs{
+display:grid;grid-template-columns:1fr 1fr;gap:8px;
+margin:28px 0 24px;
+}
+.qs-card{
+background:var(--glass);border:0.5px solid var(--gb);border-radius:14px;
+padding:16px;position:relative;overflow:hidden;
+}
+.qs-card::before{
+content:'';position:absolute;top:0;left:0;right:0;height:2px;
+}
+.qs-card.grn::before{background:var(--grn)}
+.qs-card.red::before{background:var(--red)}
+.qs-card.blu::before{background:var(--blu)}
+.qs-card.org::before{background:var(--org)}
+.qs-lbl{font-size:10px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px}
+.qs-val{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;letter-spacing:-0.5px}
+.qs-card.grn .qs-val{color:var(--grn)}
+.qs-card.red .qs-val{color:var(--red)}
+.qs-card.blu .qs-val{color:var(--blu)}
+.qs-card.org .qs-val{color:var(--org)}
+.qs-sub{font-size:10px;color:var(--tx4);margin-top:3px;font-family:'JetBrains Mono',monospace}
+
+/* APP CARDS */
+.apps{display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
+.app-card{
+display:block;text-decoration:none;color:inherit;
+background:var(--bg2);border:0.5px solid var(--gb);border-radius:18px;
+padding:22px 20px;position:relative;overflow:hidden;
+transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.app-card:active{transform:scale(0.97)}
+.app-card::after{
+content:'\203A';position:absolute;right:20px;top:50%;transform:translateY(-50%);
+font-size:24px;color:var(--tx4);font-weight:300;
+}
+.app-top{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.app-icon{
+width:48px;height:48px;border-radius:14px;
+display:flex;align-items:center;justify-content:center;
+font-size:22px;flex-shrink:0;
+}
+.app-icon.work{background:var(--grn-d);color:var(--grn)}
+.app-icon.cash{background:var(--blu-d);color:var(--blu)}
+.app-title-wrap{flex:1}
+.app-title{font-size:17px;font-weight:700;letter-spacing:-0.3px}
+.app-desc{font-size:12px;color:var(--tx3);margin-top:2px}
+
+/* Mini stats inside card */
+.app-stats{
+display:flex;gap:16px;padding-top:12px;border-top:0.5px solid var(--gb);
+}
+.app-stat{display:flex;flex-direction:column;gap:2px}
+.app-stat-val{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700}
+.app-stat-lbl{font-size:10px;color:var(--tx3);font-weight:500}
+
+/* ALERTS */
+.alerts{margin-bottom:28px}
+.alerts-title{font-size:11px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;padding-left:4px}
+.alert-item{
+display:flex;align-items:center;gap:12px;
+padding:12px 14px;background:var(--glass);border:0.5px solid var(--gb);
+border-radius:12px;margin-bottom:4px;
+}
+.alert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.alert-dot.grn{background:var(--grn)}
+.alert-dot.red{background:var(--red)}
+.alert-dot.org{background:var(--org)}
+.alert-dot.blu{background:var(--blu)}
+.alert-info{flex:1;min-width:0}
+.alert-text{font-size:13px;font-weight:500}
+.alert-sub{font-size:10px;color:var(--tx3);margin-top:1px}
+.alert-val{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;flex-shrink:0}
+
+/* FOOTER */
+.ftr{text-align:center;padding:20px 0 40px;font-size:11px;color:var(--tx4)}
+.ftr em{font-style:normal;color:var(--grn)}
+
+/* LOADING */
+.loading{text-align:center;padding:60px 20px;color:var(--tx3);font-size:13px}
+.loading .spinner{
+width:24px;height:24px;border:2px solid var(--tx4);border-top-color:var(--grn);
+border-radius:50%;margin:0 auto 12px;
+animation:spin 0.8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* FADE IN ANIM */
+.fi{opacity:0;transform:translateY(12px);animation:fadeIn 0.5s ease forwards}
+@keyframes fadeIn{to{opacity:1;transform:translateY(0)}}
+.fi:nth-child(1){animation-delay:0.05s}
+.fi:nth-child(2){animation-delay:0.1s}
+.fi:nth-child(3){animation-delay:0.15s}
+.fi:nth-child(4){animation-delay:0.2s}
+.fi:nth-child(5){animation-delay:0.25s}
+</style>
+</head>
+<body>
+
+<div class="ambient"></div>
+
+<div class="wrap">
+  <!-- HEADER -->
+  <div class="hdr fi">
+    <div class="hdr-logo">AndreaOS<em>_</em></div>
+    <div class="hdr-sub">Il tuo sistema operativo personale</div>
+    <div class="hdr-date" id="hDate"></div>
+  </div>
+
+  <!-- QUICK STATS -->
+  <div class="qs fi" id="qStats">
+    <div class="loading" style="grid-column:1/-1"><div class="spinner"></div>Caricamento...</div>
+  </div>
+
+  <!-- APP CARDS -->
+  <div class="apps">
+    <a href="work.html" class="app-card fi">
+      <div class="app-top">
+        <div class="app-icon work">&#128203;</div>
+        <div class="app-title-wrap">
+          <div class="app-title">Gestionale</div>
+          <div class="app-desc">Lavori, clienti, collaboratori, finanze</div>
+        </div>
+      </div>
+      <div class="app-stats" id="workStats">
+        <div class="app-stat"><div class="app-stat-val" style="color:var(--tx3)">...</div><div class="app-stat-lbl">Caricamento</div></div>
+      </div>
+    </a>
+
+    <a href="cashflow.html" class="app-card fi">
+      <div class="app-top">
+        <div class="app-icon cash">&#128176;</div>
+        <div class="app-title-wrap">
+          <div class="app-title">CashFlow_</div>
+          <div class="app-desc">Spese personali, budget, dare/avere</div>
+        </div>
+      </div>
+      <div class="app-stats" id="cashStats">
+        <div class="app-stat"><div class="app-stat-val" style="color:var(--tx3)">...</div><div class="app-stat-lbl">Caricamento</div></div>
+      </div>
+    </a>
+  </div>
+
+  <!-- ALERTS -->
+  <div class="alerts fi">
+    <div class="alerts-title">Attenzione</div>
+    <div id="alertsList">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="ftr fi">AndreaOS<em>_</em> &middot; 2026</div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+firebase.initializeApp({
+  apiKey:"AIzaSyCs7Gpx9uZk3Zr_UOGbyfa_EL9MjfSrVUE",
+  authDomain:"andreaos-a7a3b.firebaseapp.com",
+  databaseURL:"https://andreaos-a7a3b-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:"andreaos-a7a3b",
+  storageBucket:"andreaos-a7a3b.firebasestorage.app",
+  messagingSenderId:"518638530790",
+  appId:"1:518638530790:web:c905ec955c932c019bcb27"
+});
+var db=firebase.database();
+
+var D={jobs:{},tx:{},pe:{},focus:{}};
+
+function pz(n){return n<10?'0'+n:''+n}
+function isoD(d){return d.getFullYear()+'-'+pz(d.getMonth()+1)+'-'+pz(d.getDate())}
+function fE(n){return n<0?'-\u20AC'+Math.abs(n).toLocaleString('it-IT',{minimumFractionDigits:0,maximumFractionDigits:0}):'\u20AC'+n.toLocaleString('it-IT',{minimumFractionDigits:0,maximumFractionDigits:0})}
+
+/* Date header */
+var now=new Date();
+document.getElementById('hDate').textContent=now.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+/* Load data */
+db.ref('jobs').on('value',function(s){D.jobs=s.val()||{};render()});
+db.ref('transactions').on('value',function(s){D.tx=s.val()||{};render()});
+db.ref('personal_expenses').on('value',function(s){D.pe=s.val()||{};render()});
+db.ref('focus').on('value',function(s){D.focus=s.val()||{};render()});
+
+function render(){
+  var now=new Date();var td=isoD(now);var m=now.getMonth();var y=now.getFullYear();
+  var prefix=y+'-'+pz(m+1);
+
+  /* ===== WORK DATA ===== */
+  var jobs=Object.values(D.jobs);
+  var activeJobs=jobs.filter(function(j){return j.status!=='done'}).length;
+  var doneJobs=jobs.filter(function(j){return j.status==='done'}).length;
+  var unpaidCollabs=0;var collabDebt=0;
+  jobs.forEach(function(j){if(j.collaborators){Object.values(j.collaborators).forEach(function(c){if(!c.paid){unpaidCollabs++;collabDebt+=parseFloat(c.amount)||0}})}});
+
+  /* AndreaOS transactions — split confirmed vs pending, all time not just month */
+  var txs=Object.values(D.tx);
+  var incConf=0,expConf=0,incPend=0,expPend=0,pendingCount=0;
+  txs.forEach(function(t){
+    var a=parseFloat(t.amount)||0;
+    if(t.confirmed){
+      if(t.type==='income')incConf+=a;else expConf+=a;
+    } else {
+      pendingCount++;
+      if(t.type==='income')incPend+=a;else expPend+=a;
+    }
+  });
+  var saldoConf=incConf-expConf;
+
+  document.getElementById('workStats').innerHTML=
+    '<div class="app-stat"><div class="app-stat-val" style="color:var(--grn)">'+activeJobs+'</div><div class="app-stat-lbl">Lavori attivi</div></div>'+
+    '<div class="app-stat"><div class="app-stat-val" style="color:var(--tx2)">'+doneJobs+'</div><div class="app-stat-lbl">Completati</div></div>'+
+    '<div class="app-stat"><div class="app-stat-val" style="color:var(--grn)">'+fE(saldoConf)+'</div><div class="app-stat-lbl">Confermato</div></div>'+
+    (pendingCount>0?'<div class="app-stat"><div class="app-stat-val" style="color:var(--org)">'+pendingCount+'</div><div class="app-stat-lbl">In attesa</div></div>':'');
+
+  /* ===== CASHFLOW STATS ===== */
+  var peTx=D.pe.transactions?Object.values(D.pe.transactions):[];
+  var peMonth=0;var peCount=0;
+  peTx.forEach(function(t){if(t.date&&t.date.substring(0,7)===prefix){peMonth+=parseFloat(t.amount)||0;peCount++}});
+  var avgDay=now.getDate()>0?peMonth/now.getDate():0;
+
+  var budgets=D.pe.budgets||{};var budgetOver=0;var catTots={};
+  peTx.forEach(function(t){if(t.date&&t.date.substring(0,7)===prefix){var c=t.category;catTots[c]=(catTots[c]||0)+(parseFloat(t.amount)||0)}});
+  Object.keys(budgets).forEach(function(c){if(catTots[c]&&catTots[c]>=budgets[c])budgetOver++});
+
+  document.getElementById('cashStats').innerHTML=
+    '<div class="app-stat"><div class="app-stat-val" style="color:var(--red)">\u20AC'+Math.round(peMonth)+'</div><div class="app-stat-lbl">Speso mese</div></div>'+
+    '<div class="app-stat"><div class="app-stat-val" style="color:var(--tx2)">'+peCount+'</div><div class="app-stat-lbl">Transazioni</div></div>'+
+    '<div class="app-stat"><div class="app-stat-val" style="color:var(--org)">\u20AC'+Math.round(avgDay)+'</div><div class="app-stat-lbl">Media/giorno</div></div>'+
+    (budgetOver>0?'<div class="app-stat"><div class="app-stat-val" style="color:var(--red)">'+budgetOver+'</div><div class="app-stat-lbl">Budget sforati</div></div>':'');
+
+  /* ===== DARE/AVERE BALANCE ===== */
+  var totAvere=0,totDare=0;
+  /* Avere from jobs not done */
+  jobs.forEach(function(j){if(j.status!=='done'){var a=parseFloat(j.amount)||0;if(a>0)totAvere+=a}});
+  /* Avere from AOS income transactions not confirmed */
+  txs.forEach(function(t){if(t.type==='income'&&!t.confirmed){totAvere+=parseFloat(t.amount)||0}});
+  /* Dare from job collaborators unpaid */
+  jobs.forEach(function(j){if(j.collaborators){Object.values(j.collaborators).forEach(function(c){if(!c.paid)totDare+=parseFloat(c.amount)||0})}});
+  /* Dare from AOS expense transactions not confirmed */
+  txs.forEach(function(t){if(t.type==='expense'&&!t.confirmed){totDare+=parseFloat(t.amount)||0}});
+  /* Dare from AOS transaction collabs */
+  txs.forEach(function(t){if(t.collabs){Object.values(t.collabs).forEach(function(c){totDare+=parseFloat(c.amount)||0})}});
+  /* Manual ledger */
+  var ledger=D.pe.ledger?Object.values(D.pe.ledger):[];
+  ledger.forEach(function(l){if(!l.settled){if(l.type==='avere')totAvere+=parseFloat(l.amount)||0;else totDare+=parseFloat(l.amount)||0}});
+
+  var netBal=incConf-expConf-peMonth;
+
+  /* ===== QUICK STATS ===== */
+  document.getElementById('qStats').innerHTML=
+    '<div class="qs-card grn"><div class="qs-lbl">Confermato</div><div class="qs-val">'+fE(incConf)+'</div><div class="qs-sub">'+(incPend>0?'In attesa: +'+fE(incPend):'nessuno in attesa')+'</div></div>'+
+    '<div class="qs-card red"><div class="qs-lbl">Spese personali</div><div class="qs-val">\u20AC'+Math.round(peMonth)+'</div><div class="qs-sub">'+peCount+' transazioni mese</div></div>'+
+    '<div class="qs-card blu"><div class="qs-lbl">Ti devono</div><div class="qs-val">'+fE(totAvere)+'</div><div class="qs-sub">'+(totDare>0?'Devi: '+fE(totDare):'Nessun debito')+'</div></div>'+
+    '<div class="qs-card '+(netBal>=0?'grn':'org')+'"><div class="qs-lbl">Bilancio netto</div><div class="qs-val">'+(netBal>=0?'+':'')+fE(netBal)+'</div><div class="qs-sub">confermato - spese pers.</div></div>';
+
+  /* ===== ALERTS ===== */
+  var alerts=[];
+  if(pendingCount>0)alerts.push({dot:'org',text:pendingCount+' transazion'+(pendingCount===1?'e':'i')+' da confermare',sub:'Gestionale',val:fE(incPend+expPend)});
+  if(unpaidCollabs>0)alerts.push({dot:'red',text:unpaidCollabs+' collaborator'+(unpaidCollabs===1?'e':'i')+' da pagare',sub:'Gestionale',val:fE(collabDebt)});
+  var overdue=jobs.filter(function(j){return j.deadline&&j.deadline<td&&j.status!=='done'});
+  if(overdue.length)alerts.push({dot:'red',text:overdue.length+' lavor'+(overdue.length===1?'o':'i')+' scadut'+(overdue.length===1?'o':'i'),sub:'Gestionale',val:''});
+  if(budgetOver>0)alerts.push({dot:'org',text:budgetOver+' budget sforat'+(budgetOver===1?'o':'i'),sub:'CashFlow',val:''});
+  var todayFocus=Object.values(D.focus).filter(function(f){return f.date===td&&!f.done});
+  if(todayFocus.length)alerts.push({dot:'blu',text:todayFocus.length+' to-do per oggi',sub:'Focus',val:''});
+  var soon=new Date();soon.setDate(soon.getDate()+3);var soonStr=isoD(soon);
+  var upcoming=jobs.filter(function(j){return j.deadline&&j.deadline>=td&&j.deadline<=soonStr&&j.status!=='done'});
+  if(upcoming.length)alerts.push({dot:'org',text:upcoming.length+' scadenz'+(upcoming.length===1?'a':'e')+' entro 3 giorni',sub:'Gestionale',val:''});
+
+  var al=document.getElementById('alertsList');
+  if(!alerts.length){
+    al.innerHTML='<div class="alert-item"><div class="alert-dot grn"></div><div class="alert-info"><div class="alert-text">Tutto a posto!</div><div class="alert-sub">Nessuna notifica</div></div></div>';
+  } else {
+    var ah='';
+    for(var i=0;i<alerts.length;i++){
+      var a=alerts[i];
+      ah+='<div class="alert-item"><div class="alert-dot '+a.dot+'"></div><div class="alert-info"><div class="alert-text">'+a.text+'</div><div class="alert-sub">'+a.sub+'</div></div>'+(a.val?'<div class="alert-val" style="color:var(--org)">'+a.val+'</div>':'')+'</div>';
+    }
+    al.innerHTML=ah;
+  }
+}
+</script>
+</body>
+</html>
